@@ -1,0 +1,11 @@
+{
+    "elements": {},
+    "attributes": {
+        "flashy": {
+            "context": "div"
+        },
+        "validate": {
+            "context": "div"
+        }
+    }
+}

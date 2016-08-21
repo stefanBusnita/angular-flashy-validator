@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Test page for the directive</title>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="">
+        <link rel="stylesheet" type="text/css" href="css/flash.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="js/controllers/testPageController.js"></script>
+        <script src="js/directives/flashyValidator.js"></script>
+        <script src="js/directives/validate.js"></script>
+        
+    </head>
+    <body ng-app="angularFlashyValidator" flashy>
+        <div id="flashesContainer"></div>  
+        <div ng-controller="TestPageController">
+            
+            <input type="text" ng-model="test.inputVal" ng-required="firstVal+secondVal==3" validate />
+        </div>
+    </body>
+</html>
