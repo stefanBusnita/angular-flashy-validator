@@ -1,15 +1,15 @@
 {
-    "name": "angular-flashy-validator",
-    "version": "1.0.0",
-    "main": "path/to/main.css",
-    "ignore": [
-        ".jshintrc",
-        "**/*.txt"
-    ],
-    "dependencies": {
-        "angular" : "1.5.8",
-        "less" : "2.7.1"
-    },
-    "devDependencies": {
-    }
+  "name": "angular-flashy-validator",
+  "version": "1.0.0",
+  "main": "path/to/main.css",
+  "ignore": [
+    ".jshintrc",
+    "**/*.txt"
+  ],
+  "dependencies": {
+    "angular": "1.5.8",
+    "less": "2.7.1",
+    "bootstrap": "^3.3.7"
+  },
+  "devDependencies": {}
 }

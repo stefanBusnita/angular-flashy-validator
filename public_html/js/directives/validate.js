@@ -1,45 +1,110 @@
+
 angular.module('angularFlashyValidator').directive('validate', function ($http) {
     return{
         restrict: 'A',
-        require: "^flashy",
-        controller : function($scope){
-          this.removeFromBuffer = function(id){
-              //$scope.buffer[id] = '';
-              console.log("child called");
-          };
+        require: ['^flashy', 'ngModel'],
+        controller: function ($scope) {
+
         },
         compile: function (tElement, tAttrs) {
 
             return {
                 pre: function (scope, element, attrs, ctrl) {
                     scope.buffer = {};
-//                    $http.get('messages.json')
-//                            .then(function (res) {
-//                                scope.messages = res;
-//                            });
+
+                    $http.get('json/messages.json')
+                            .then(function (res) {
+                                scope.messages = res;
+                            });
                 },
                 post: function (scope, element, attrs, ctrl) {
-                    
-                    ctrl.doSomething(attrs);
-                    /**
-                     * Check for : pattern, (ng-required)required, maxlength, minlength, min-date, max-date
-                     */
-                   
-                    console.log(scope.$eval(attrs.ngRequired));
+                    var filters, flashController = ctrl[0], modelController = ctrl[1];
 
-                    //create something like the requires in ecard ?? with registration for this kind of stuff
-
-                    scope.$watch(attrs.ngModel, function (newV) {
-
-                        //checkingProcess here
-
-                        if (!newV) {
-                            ctrl.registerFlash("this field can't be empty", 4);
-                        } else {
-                            console.log("removed");
+                    function checkAttrs() {
+                        if (scope.$eval(attrs.ngRequired) && attrs.ngRequired || attrs.required) {
+                            modelController.$validators.isRequired = function (modelValue, viewValue) {
+                                return filters["required"].checkValidity(modelValue, viewValue);
+                            };
                         }
-                    })
+                        if (attrs.ngPattern) {
+                            modelController.$validators.hasPattern = function (modelValue, viewValue) {
+                                return filters["hasPattern"].checkValidity(modelValue, viewValue);
+                            };
+                        }
+                        if (attrs.minlength || attrs.ngMinLength) {//delayed a bit
+                            modelController.$validators.minLength = function (modelValue, viewValue) {
+                                return filters["minLength"].checkValidity(modelValue, viewValue);
+                            };
+                        }
+                    }
+                    ;
 
+                    filters = {
+                        required: {
+                            type: "required",
+                            checkValidity: function (modelValue, viewValue) {
+                                console.log("required model and viewValue",modelValue,viewValue);
+                                if (scope.$eval(attrs.ngRequired) || attrs.required) {
+                                    if (viewValue==='' || viewValue===undefined) {
+                                        console.log("there is no value");
+                                        flashController.registerFlash(attrs.id, "field can't be empty", this.type);
+                                        return false;
+                                    } else {
+                                        flashController.removeFlash(attrs.id, this.type);
+                                        console.log("removed");
+                                        return true;
+                                    }
+                                } else {
+                                    return true;
+                                }
+                            }
+                        },
+                        maxLength: {
+                            type: "maxLength",
+                            checkValidity: function (modelValue, viewValue) {
+
+                            }
+                        },
+                        minLength: {
+                            type: "minLength",
+                            checkValidity: function (modelValue, viewValue) {
+                                    var minLengthValue = parseInt(attrs.ngMinLength || attrs.minlength,10);
+                                    if(viewValue!==undefined && viewValue!=='' && viewValue.length <  minLengthValue){
+                                       flashController.registerFlash(attrs.id, "min length not met", this.type);
+                                        return false; 
+                                    }else{
+                                        flashController.removeFlash(attrs.id, this.type);
+                                        return true;
+                                    }
+                                    return true;
+                            }
+                        },
+                        hasPattern: {
+                            type: "hasPattern",
+                            checkValidity: function (modelValue, viewValue) {
+                                    if (viewValue!==undefined && viewValue!=='' && new RegExp(attrs.ngPattern).test(viewValue)) {
+                                        flashController.removeFlash(attrs.id, this.type);
+                                    } else {
+                                        flashController.registerFlash(attrs.id, "pattern not passed", this.type);
+                                    }
+                                return true;
+                            }
+                        },
+                        minDate: {
+                            type: "minDate",
+                            checkValidity: function (modelValue, viewValue) {
+
+                            }
+                        },
+                        maxDate: {
+                            type: "maxDate",
+                            checkValidity: function (modelValue, viewValue) {
+
+                            }
+                        }
+                    }
+
+                    checkAttrs();
                 }
 
             }
@@ -47,4 +112,4 @@ angular.module('angularFlashyValidator').directive('validate', function ($http) 
         }
 
     }
-})
+});

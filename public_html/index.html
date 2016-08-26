@@ -10,18 +10,35 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <link rel="shortcut icon" href="">
         <link rel="stylesheet" type="text/css" href="css/flash.css">
+        <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="bower_components/angular/angular.js"></script>
+        <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/testPageController.js"></script>
         <script src="js/directives/flashyValidator.js"></script>
         <script src="js/directives/validate.js"></script>
-        
+        <script src="js/services/flashService.js"></script>
+
     </head>
     <body ng-app="angularFlashyValidator" flashy>
         <div id="flashesContainer"></div>  
         <div ng-controller="TestPageController">
-            
-            <input type="text" ng-model="test.inputVal" ng-required="firstVal+secondVal==3" validate />
+            <form novalidate="" name="testForm">
+                <div class="form-group" ng-class="{'has-error' : testForm.tstInputName.$error.invalidField}">
+                    <label>Write stuff here</label>
+                    <input class="form-control" type="text" name="tstInputName" id="tstInput" 
+                           ng-model="test.inputVal" 
+                           ng-required="firstVal+secondVal==3"
+                           ng-pattern="/^(0|[1-9][0-9]*)$/"
+                           minlength="4"
+                           validate/>
+                </div>
+                Input is valid: {{testForm.tstInputName.$valid}}<br>
+                Input fails required: {{testForm.tstInputName.$error.isRequired}}<br>
+                Input fails pattern: {{testForm.tstInputName.$error.hasPattern}}<br>
+                Input fails min length: {{testForm.tstInputName.$error.minLength}}<br>
+            </form>
+            <button ng-click="createRandomFlash()">Create a random flash</button>
         </div>
     </body>
 </html>

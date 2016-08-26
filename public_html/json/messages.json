@@ -1,0 +1,8 @@
+{
+    "required": "is required, please provide a value.",
+    "minDate" : "min date for this field is",
+    "maxDate" : "max date for this field is",
+    "minLength" : "min length for this field is",
+    "maxLength" : "max length for this field is",
+    "hasPattern" : "the following does not check again the pattern"
+}

@@ -1,8 +1,5 @@
-angular.module('angularFlashyValidator', []);
 
-angular.module('angularFlashyValidator').run(function runApp($rootScope) {});
-
-angular.module('angularFlashyValidator').controller('TestPageController', function ($scope) {
+angular.module('angularFlashyValidator').controller('TestPageController', function ($scope,FlashService) {
 
     $scope.firstVal = 1;
     $scope.secondVal = 2;
@@ -16,8 +13,10 @@ angular.module('angularFlashyValidator').controller('TestPageController', functi
             console.log(newV);
         }
         
-    })
-
+    });
+    
+    $scope.createRandomFlash = function(){
+        FlashService.addFlash("randomID","this is a random flash","random");
+    };
+    
 });
-
-
