@@ -1,6 +1,7 @@
 
 angular.module('angularFlashyValidator').controller('TestPageController', function ($scope,FlashService) {
-
+    
+    $scope.validatePushed = false;
     $scope.firstVal = 1;
     $scope.secondVal = 2;
     
@@ -15,8 +16,12 @@ angular.module('angularFlashyValidator').controller('TestPageController', functi
         
     });
     
+    $scope.validateForm = function(){
+        $scope.validatePushed = true;
+    }
+    
     $scope.createRandomFlash = function(){
-        FlashService.addFlash("randomID","this is a random flash","random");
+        FlashService.addFlash("randomID","this is a random flash","random",1);
     };
     
 });

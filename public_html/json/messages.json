@@ -4,5 +4,5 @@
     "maxDate" : "max date for this field is",
     "minLength" : "min length for this field is",
     "maxLength" : "max length for this field is",
-    "hasPattern" : "the following does not check again the pattern"
+    "hasPattern" : "does not check against the pattern."
 }

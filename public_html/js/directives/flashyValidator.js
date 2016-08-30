@@ -1,20 +1,29 @@
 
-angular.module('angularFlashyValidator').directive('flashy', function ($compile, $rootScope,FlashService) {
+angular.module('angularFlashyValidator').directive('flashy', function ($compile, $rootScope, FlashService) {
     return{
         restrict: "A",
         controller: function ($scope) {
-            this.registerFlash = function (id, text, type) {
+
+            this.registerFlash = function (id, text, type, level) {
+                console.log("arguments", id,text,type,level);
+                var classes = {
+                    "1": 'success',
+                    "2": 'info',
+                    "3": 'warning',
+                    "4": 'danger'
+                };
+                var classString = classes[level];
+                console.log("classes",classes);
+                console.log("class string", classString);
                 if (!this.checkFlashExistance(id, type)) {
-                    $scope.flashes.push({
+
+                    $scope.flashes.unshift({
                         text: text,
                         id: id,
-                        type: type
+                        type: type,
+                        class: 'flash-' + classString
                     });
-                } else {
-                    //console.log("flash already exists");
-                    //do nothing
                 }
-
             };
 
             this.checkFlashExistance = function (id, type) {
@@ -26,16 +35,15 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
                 return false;
             };
 
-            this.removeFlash = function (id,type) {
+            this.removeFlash = function (id, type) {
                 for (var i = 0; i < $scope.flashes.length; i++) {
                     if ($scope.flashes[i].id === id && $scope.flashes[i].type === type) {
                         $scope.flashes.splice(i, 1);
                         break;
                     }
                 }
-                console.log($scope.flashes);
             };
-            
+
         },
         compile: function (tElement, tAttr) {
 
@@ -44,15 +52,15 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
                     scope.flashes = [];
                 },
                 post: function (scope, element, attr, ctrl) {
+                    
+                    scope.removeFlash = ctrl.removeFlash;
 
                     $rootScope.$evalAsync(function (scope) {
-                       // console.log("eval async");
-                        var tpl = "<div class='flash'><ul><li ng-repeat='item in flashes'>{{item.text}}</ul></div>";
+                        var tpl = "<div class='flash'><ul class='flash-list'><li class='{{item.class}}' ng-repeat='item in flashes'>{{item.text}}<span class='btn' ng-click='removeFlash(item.id,item.type)'>&#10006;</span></li></ul></div>";
                         addFlashToDOM(tpl);
                     });
-                    
-                    console.log(ctrl);
-                    FlashService.registerListener("ctrl",ctrl);
+
+                    FlashService.registerListener("ctrl", ctrl);
 
                     function addFlashToDOM(tpl) {
 

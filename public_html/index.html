@@ -13,6 +13,7 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="bower_components/angular/angular.js"></script>
+         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/testPageController.js"></script>
         <script src="js/directives/flashyValidator.js"></script>
@@ -28,17 +29,34 @@ and open the template in the editor.
                     <label>Write stuff here</label>
                     <input class="form-control" type="text" name="tstInputName" id="tstInput" 
                            ng-model="test.inputVal" 
+                           title="Write stuff here"
                            ng-required="firstVal+secondVal==3"
                            ng-pattern="/^(0|[1-9][0-9]*)$/"
                            minlength="4"
+                           maxlength="6"
                            validate/>
                 </div>
-                Input is valid: {{testForm.tstInputName.$valid}}<br>
-                Input fails required: {{testForm.tstInputName.$error.isRequired}}<br>
-                Input fails pattern: {{testForm.tstInputName.$error.hasPattern}}<br>
-                Input fails min length: {{testForm.tstInputName.$error.minLength}}<br>
+                <div>
+                    <h1>Text input validation</h1>
+                    <var>Input is valid: {{testForm.tstInputName.$valid}}</var><br>
+                    <var>Input fails required: {{testForm.tstInputName.$error.isRequired}}</var><br>
+                    <var>Input fails pattern: {{testForm.tstInputName.$error.hasPattern}}<br>
+                    <var>Input fails min length: {{testForm.tstInputName.$error.minLength}}<br>
+                </div>
+
+                <input type="date" id="exampleInput" name="testDate" ng-model="test.dateValue"
+                       placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required />
+                <div>
+                    <h1>Date input validation</h1>
+                <var>dateValue is = {{test.dateValue| date: "yyyy-MM-dd"}}</var><br/>
+                <var>date is valid = {{testForm.testDate.$valid}}</var><br/>
+                <var>date has error = {{testForm.testDate.$error}}</var><br/>
+                <var>date is required = {{!!testForm.$error.required}}</var><br/>
+                </div>
+
             </form>
             <button ng-click="createRandomFlash()">Create a random flash</button>
+            <button ng-click="validateForm()">Validate form </button>
         </div>
     </body>
 </html>
