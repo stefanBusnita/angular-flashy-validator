@@ -6,9 +6,8 @@ angular.module('angularFlashyValidator').service('FlashService',function(){
        listeners[key] = callbackFunction;
    };
    
-   this.addFlash = function(id,text,type,level){
-       console.log(listeners);
-       listeners["ctrl"].registerFlash(id,text,type,level);
+   this.addFlash = function(id,text,type,level,duration){
+       listeners["ctrl"].registerFlash(id,text,type,level,duration);
    };
    
    this.removeFlash = function(id){ //maybe we can do this with the fadeout??

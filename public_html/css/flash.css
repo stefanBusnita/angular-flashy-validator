@@ -11,11 +11,13 @@ and open the template in the editor.
 .flash{width:200px; height:50px; position: absolute; float:right;  left: 50%;}
 .flash-list{list-style-type: none;}
 .flash-list > li{
-    width:200px;
+    width:240px;
     margin-bottom: 10px;
     padding:3px;
     border: 1px solid transparent;
     border-radius: 4px;
+    opacity: 0.9;
+    filter: alpha(opacity=90); /* For IE8 and earlier */
 }
 
 .flash-success{
@@ -37,4 +39,26 @@ and open the template in the editor.
     border-color: #dc9ea8 !important; /*color for alert */
     color: #881919; /*color for alert */
     background-color: #f2dede ; /*color for alert */
+}
+
+.fade {
+  transition: all 2s ease-in;
+  -webkit-transition: all 2s ease-in;
+}
+
+.fade.ng-enter {
+  opacity: 0;
+}
+
+.fade.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.fade.ng-leave {
+  opacity: 1;
+}
+
+.fade.ng-leave.ng-leave-active {
+  opacity: 0;
+ 
 }

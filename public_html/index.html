@@ -13,7 +13,7 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="bower_components/angular/angular.js"></script>
-         <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+        <script src="bower_components/angular-animate/angular-animate.min.js"></script>
         <script type="text/javascript" src="js/app.js"></script>
         <script type="text/javascript" src="js/controllers/testPageController.js"></script>
         <script src="js/directives/flashyValidator.js"></script>
@@ -27,36 +27,66 @@ and open the template in the editor.
             <form novalidate="" name="testForm">
                 <div class="form-group" ng-class="{'has-error' : testForm.tstInputName.$error.invalidField}">
                     <label>Write stuff here</label>
-                    <input class="form-control" type="text" name="tstInputName" id="tstInput" 
+                    <input class="form-control" type="text" name="tstInputName" 
+                           id="tstInput" 
                            ng-model="test.inputVal" 
                            title="Write stuff here"
                            ng-required="firstVal+secondVal==3"
-                           ng-pattern="/^(0|[1-9][0-9]*)$/"
+                           ng-pattern="/^$|^(0|[1-9][0-9]*)$/"
                            minlength="4"
                            maxlength="6"
-                           validate/>
+                           max="10"
+                           min="2"
+                           ng-model-options="{debounce: 300}"
+                           validate="{{validatePushed}}"/>
                 </div>
                 <div>
                     <h1>Text input validation</h1>
                     <var>Input is valid: {{testForm.tstInputName.$valid}}</var><br>
+                    <var>All error on field : {{testForm.tstInputName.$error}}</var><br>
                     <var>Input fails required: {{testForm.tstInputName.$error.isRequired}}</var><br>
-                    <var>Input fails pattern: {{testForm.tstInputName.$error.hasPattern}}<br>
-                    <var>Input fails min length: {{testForm.tstInputName.$error.minLength}}<br>
+                    <var>Input fails pattern: {{testForm.tstInputName.$error.hasPattern}}</var><br>
+                    <var>Input fails min length: {{testForm.tstInputName.$error.minLength}}</var><br>
+                    <var>Input and the stop typing: {{testForm.tstInputName.$error.test}}</var><br>
                 </div>
+                <button ng-click="changeInputFromModel()">Change with invalid value from Model -> View</button>
 
-                <input type="date" id="exampleInput" name="testDate" ng-model="test.dateValue"
-                       placeholder="yyyy-MM-dd" min="2013-01-01" max="2013-12-31" required />
+                <div class="form-group" ng-class="{'has-error' : testForm.numberInputName.$error.invalidField}">
+                    <label>Number input type</label>
+                    <input class="form-control" type="number" name="numberInputName" 
+                           id="numberInput" 
+                           ng-model="test.numberInputVal" 
+                           title="Number input"
+                           max="10"
+                           min="2"
+                           ng-model-options="{debounce: 300}"
+                           validate="{{validatePushed}}"/>
+                </div>
+                <div>
+                    <h1>Number input validation</h1>
+                    <var>Input is valid: {{testForm.tstInputName.$valid}}</var><br>
+                    <var>All error on field : {{testForm.tstInputName.$error}}</var><br>
+                    <var>Input fails min value: {{testForm.tstInputName.$error.min}}</var><br>
+                    <var>Input faild max value: {{testForm.tstInputName.$error.max}}</var><br>
+                </div>
+                <button ng-click="changeNumberInputFromModel()">Change with invalid value from Model -> View</button>
+
+                <div class="form-group">
+                    <label>Date field</label>
+                    <input class="form-control " title="Date field" type="date" id="exampleInput" name="testDate" ng-model="test.dateValue"
+                           placeholder="yyyy-mm-dd" min="2015-11-01" max="2015-12-25" validate required />
+                </div>
                 <div>
                     <h1>Date input validation</h1>
-                <var>dateValue is = {{test.dateValue| date: "yyyy-MM-dd"}}</var><br/>
-                <var>date is valid = {{testForm.testDate.$valid}}</var><br/>
-                <var>date has error = {{testForm.testDate.$error}}</var><br/>
-                <var>date is required = {{!!testForm.$error.required}}</var><br/>
+                    <var>dateValue is = {{test.dateValue| date: "yyyy-MM-dd"}}</var><br/>
+                    <var>date is valid = {{testForm.testDate.$valid}}</var><br/>
+                    <var>date has error = {{testForm.testDate.$error}}</var><br/>
+                    <var>date is required = {{!!testForm.$error.required}}</var><br/>
                 </div>
-
+                <button ng-click="changeDateInputFromModel()">Alternate between min or max invalid value from Model -> View</button><br>
             </form>
-            <button ng-click="createRandomFlash()">Create a random flash</button>
-            <button ng-click="validateForm()">Validate form </button>
+            <button ng-click="createRandomFlash()">Create a random flash with a duration of  seconds</button><br>
+            <button ng-click="validateForm()">Validate form</button>
         </div>
     </body>
 </html>
