@@ -11,6 +11,7 @@ and open the template in the editor.
 .flash{width:200px; height:50px; position: absolute; float:right;  left: 50%;}
 .flash-list{list-style-type: none;}
 .flash-list > li{
+    z-index:5000;
     width:240px;
     margin-bottom: 10px;
     padding:3px;

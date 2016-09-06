@@ -6,18 +6,36 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
         controller: function ($scope) {},
         compile: function (tElement, tAttrs) {
             return {
-                pre: function (scope, element, attrs, ctrl) {
-                    $http.get('json/messages.json')
-                            .then(function (res) {
-                                scope.message = res.data;
-                            });
-                },
+                pre: function (scope, element, attrs, ctrl) {},
                 post: function (scope, element, attrs, ctrl) {
-                    var filters, flashController = ctrl[0], modelController = ctrl[1], title = attrs.title + ' field ';
+                    var filters, flashController = ctrl[0], modelController = ctrl[1], title = (attrs.title ? attrs.title + ' field ' : "Field ??? ");
 
+                    /**
+                     * Print a console message when title or attribute are not present.
+                     * Both title and id are needed for validation.
+                     * id - part of the unique flash identifier
+                     * title - used for flash message
+                     */
+                    try {
+                        if (!attrs.title) {
+                            throw 'Title attribute not present. Default flash message will not work as expected.';
+                        }
+                        if (!attrs.id) {
+                            throw 'Id attribute not present. Flash identification will not work as expected.';
+                        }
 
+                    } catch (err) {
+                        console.log(err);
+                    }
+
+                    /**
+                     * Trigger validation manually ( when a button is pressed ).
+                     */
                     attrs.$observe('validate', function (value) {
                         console.log(value);
+                        if (value) {
+                            modelController.$validate();
+                        }
                     });
 
                     /**
@@ -45,46 +63,48 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                                 return filters["maxLength"].checkValidity(modelValue, viewValue);
                             };
                         }
-
-                        if (attrs.type === 'number' && attrs.min) {
-                            modelController.$validators.min = function (modelValue, viewValue) {
-                                return filters["min"].checkValidity(modelValue, viewValue);
-                            };
-                        }
-
+                        //checked for type because min and max are also used for number, date input type
                         if (attrs.type === 'number' && attrs.max) {
-                            modelController.$validators.max = function (modelValue, viewValue) {
-                                return filters["max"].checkValidity(modelValue, viewValue);
-                            };
+                            if (attrs.max) {
+                                modelController.$validators.max = function (modelValue, viewValue) {
+                                    return filters["max"].checkValidity(modelValue, viewValue);
+                                };
+                            }
+                            if (attrs.min) {
+                                modelController.$validators.min = function (modelValue, viewValue) {
+                                    return filters["min"].checkValidity(modelValue, viewValue);
+                                };
+                            }
                         }
-
-                        if (attrs.type === 'date' && attrs.min || attrs.minDate) {
-                            modelController.$validators.minDate = function (modelValue, viewValue) {
-                                return filters["minDate"].checkValidity(modelValue, viewValue);
-                            };
-                        }
-                        ;
-
-                        if (attrs.type == 'date' && attrs.max || attrs.maxDate) {
-                            modelController.$validators.maxDate = function (modelValue, viewValue) {
-                                return filters["maxDate"].checkValidity(modelValue, viewValue);
-                            };
+                        //checked for type because min and max are also used for number, date input type
+                        if (attrs.type === 'date') {
+                            if (attrs.max || attrs.maxDate) {
+                                modelController.$validators.maxDate = function (modelValue, viewValue) {
+                                    return filters["maxDate"].checkValidity(modelValue, viewValue);
+                                };
+                            }
+                            if (attrs.min || attrs.minDate) {
+                                modelController.$validators.minDate = function (modelValue, viewValue) {
+                                    return filters["minDate"].checkValidity(modelValue, viewValue);
+                                };
+                            }
                         }
                     }
-                    ;
 
                     /**
                      * All filters 
-                     * defaultFlashLevel, defaultDuration - flash info for validation message duration + level (flash type)
+                     * type - used for message ( flash )  identification process 
+                     * defaultFlashLevel - default flash level ( implies changes in css used for that flash )
+                     * defaultDuration - duration of the flash on screen
                      * checkValidity - $validators pipeline functions - validation logic for each case returning true/false fed to $validators.
-                     * validation does not pass, a flash will be registered with the appropriate message
-                     * validation does pass, the flash message is removed.
+                     *     - validation does not pass -> a flash will be registered with the appropriate message
+                     *     - validation does pass -> the flash message is removed when pipeline $validators functions are called
                      */
                     filters = {
                         required: {
                             type: "required",
                             defaultFlashLevel: '3',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 if (scope.$eval(attrs.ngRequired) || attrs.required) {
                                     if (viewValue === '' || viewValue === undefined) {
@@ -102,10 +122,10 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         maxLength: {
                             type: "maxLength",
                             defaultFlashLevel: '3',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 var maxLengthValue = parseInt(scope.$eval(attrs.ngMaxLength) || attrs.maxlength, 10);
-                                if (viewValue !== undefined && viewValue !== '' && viewValue.length >= maxLengthValue) {
+                                if (viewValue !== undefined && viewValue !== '' && viewValue.length > maxLengthValue) {
                                     flashController.registerFlash(attrs.id, title + "max length reached or exceded.", this.type, this.defaultFlashLevel);
                                     return false;
                                 } else {
@@ -118,7 +138,7 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         minLength: {
                             type: "minLength",
                             defaultFlashLevel: '2',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 var minLengthValue = parseInt(scope.$eval(attrs.ngMinLength) || attrs.minlength, 10);
                                 if (viewValue !== undefined && viewValue !== '' && viewValue.length < minLengthValue) {
@@ -134,13 +154,13 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         hasPattern: {
                             type: "hasPattern",
                             defaultFlashLevel: '4',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 if (viewValue !== undefined && viewValue !== '' && new RegExp(attrs.ngPattern).test(viewValue)) {
                                     flashController.removeFlash(attrs.id, this.type);
                                     return true;
                                 } else {
-                                    flashController.registerFlash(attrs.id, title + "field pattern not passed.", this.type, this.defaultFlashLevel);
+                                    flashController.registerFlash(attrs.id, title + "pattern not passed.", this.type, this.defaultFlashLevel);
                                     return false;
                                 }
                                 return true;
@@ -149,11 +169,11 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         minDate: {
                             type: "minDate",
                             defaultFlashLevel: '4',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
-                                var minDate = attrs.min || attrs.minDate;
-                                var time = Date.parse(viewValue);
-                                var minTime = Date.parse(minDate);
+                                var minDate = attrs.min || attrs.minDate,
+                                        time = Date.parse(viewValue),
+                                        minTime = Date.parse(minDate);
 
                                 if (time < minTime) {
                                     flashController.registerFlash(attrs.id, title + "min date is " + minDate + ".", this.type, this.defaultFlashLevel);
@@ -169,11 +189,11 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         maxDate: {
                             type: "maxDate",
                             defaultFlashLevel: '4',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
-                                var maxDate = attrs.max || attrs.maxDate;
-                                var time = Date.parse(viewValue);
-                                var maxTime = Date.parse(maxDate);
+                                var maxDate = attrs.max || attrs.maxDate,
+                                        time = Date.parse(viewValue),
+                                        maxTime = Date.parse(maxDate);
 
                                 if (time > maxTime) {
                                     flashController.registerFlash(attrs.id, title + "max date is " + maxDate + ".", this.type, this.defaultFlashLevel);
@@ -190,7 +210,7 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         min: {
                             type: "min",
                             defaultFlashLevel: '2',
-                            defaultDuration: 15,
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 if (parseInt(viewValue) < parseInt(attrs.min)) {
                                     flashController.registerFlash(attrs.id, title + "min value is " + attrs.min + ".", this.type, this.defaultFlashLevel);
@@ -205,8 +225,8 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                         },
                         max: {
                             type: "max",
-                            defaultFlashLevel: '2',
-                            defaultDuration: 15,
+                            defaultFlashLevel: '2', 
+                            defaultDuration: 15, //not added to flash creation, can be added as last param
                             checkValidity: function (modelValue, viewValue) {
                                 if (parseInt(viewValue) > parseInt(attrs.max)) {
                                     flashController.registerFlash(attrs.id, title + "max value is " + attrs.max + ".", this.type, this.defaultFlashLevel);
@@ -220,7 +240,7 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                             }
                         }
                     };
-
+                    //start attribute checking process for validation
                     checkAttrs();
                 }
 

@@ -12,12 +12,18 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
              * @param  duration - if present flash is closed after a number of seconds.
              */
             this.registerFlash = function (id, text, type, level, duration) {
+                /**
+                 * css classes for flash
+                 */
                 var classes = {
                     "1": 'success',
                     "2": 'info',
                     "3": 'warning',
                     "4": 'danger'
                 }, classString = classes[level];
+                /**
+                 * Check for flash existance, add it afterwards
+                 */
                 if (!this.checkFlashExistance(id, type)) {
                     $scope.flashes.unshift({
                         text: text,
@@ -25,7 +31,9 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
                         type: type,
                         class: 'flash-' + classString
                     });
-
+                    /**
+                     * Check for duration of flash, and remove flash after a certain interval
+                     */
                     if (duration && duration > 0) {
                         $timeout(function () {
                             for (var i = 0; i < $scope.flashes.length; i++) {
@@ -39,9 +47,10 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
 
                 }
             };
-
             /**
              * Check if a certain flash with id and type exists
+             * @param  id - used as part of flash identification ( validation : id of DOM elem, manual generation : any value )
+             * @param type - used as part of flash identification ( validation : type e.g required, maxlength, manual generation : any value )
              */
             this.checkFlashExistance = function (id, type) {
                 for (var i = 0; i < $scope.flashes.length; i++) {
@@ -53,6 +62,8 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
             };
             /**
              * Remove flash with certain id and type
+             * @param  id - used as part of flash identification ( validation : id of DOM elem, manual generation : any value )
+             * @param type - used as part of flash identification ( validation : type e.g required, maxlength, manual generation : any value )
              */
             this.removeFlash = function (id, type) {
                 for (var i = 0; i < $scope.flashes.length; i++) {
@@ -72,21 +83,22 @@ angular.module('angularFlashyValidator').directive('flashy', function ($compile,
                 },
                 post: function (scope, element, attr, ctrl) {
                     var tpl, domElements;
-                    scope.removeFlash = ctrl.removeFlash;
                     /**
-                     * Call function to add template to DOM with all messages.
+                     * User for remove button on flash
                      */
-                    $rootScope.$evalAsync(function (scope) {
-                        tpl = "<div class='flash'><ul class='flash-list'><li class='{{item.class}} fade' ng-repeat='item in flashes'>{{item.text}}<span class='btn' ng-click='removeFlash(item.id,item.type)'>&#10006;</span></li></ul></div>";
-                        addFlashToDOM(tpl);
-                    });
-                    
+                    scope.ctrl = ctrl;
                     /**
                      * Use a service to register functions for adding / removing a flash
                      * Using FlashService, we can create a flash/remove it from any controller.
                      */
                     FlashService.registerListener("ctrl", ctrl);
-                    
+                    /**
+                     * Call function to add template to DOM with all messages.
+                     */
+                    $rootScope.$evalAsync(function (scope) {
+                        tpl = "<div class='flash'><ul class='flash-list'><li class='{{item.class}} fade' ng-repeat='item in flashes'>{{item.text}}<span class='btn' ng-click='ctrl.removeFlash(item.id,item.type)'>&#10006;</span></li></ul></div>";
+                        addFlashToDOM(tpl);
+                    });
                     /**
                      * Compile template on scope and add to DOM.
                      */
