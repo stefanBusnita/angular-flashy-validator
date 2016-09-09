@@ -60,7 +60,7 @@ and open the template in the editor.
                            max="10"
                            min="2"
                            ng-model-options="{debounce: 300}"
-                           validate="{{validate}}"/>
+                           validate="{{p.validate}}"/>
                 </div>
                 <div>
                     <h1>Number input validation</h1>
@@ -74,7 +74,7 @@ and open the template in the editor.
                 <div class="form-group">
                     <label>Date field</label>
                     <input class="form-control " title="Date field" type="date" id="exampleInput" name="testDate" ng-model="test.dateValue"
-                           placeholder="yyyy-mm-dd" min="2015-11-01" max="2015-12-25" validate="{{validate}}" required />
+                           placeholder="yyyy-mm-dd" min="2015-11-01" max="2015-12-25" validate="{{p.validate}}" required />
                 </div>
                 <div>
                     <h1>Date input validation</h1>

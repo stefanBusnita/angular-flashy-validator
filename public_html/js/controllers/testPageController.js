@@ -1,7 +1,8 @@
 
-angular.module('angularFlashyValidator').controller('TestPageController', function ($scope, FlashService) {
+angular.module('angularFlashyValidator').controller('TestPageController', function ($scope,$timeout, FlashService) {
 
-    $scope.validatePushed = false;
+    $scope.validate = false;
+    
     $scope.firstVal = 1;
     $scope.secondVal = 2;
     var minDateOrMaxDate = 'max', minValOrMaxVal = 'min';
@@ -9,19 +10,13 @@ angular.module('angularFlashyValidator').controller('TestPageController', functi
 
     $scope.test = {};
 
-    $scope.$watch('validate', function (newV) {
-        console.log("in watch", newV)
-    });
-
     $scope.validateForm = function () {
-
+        //trigger a validation on button press of all fields.
         $scope.validate = true;
-        console.log("validate form pushed", $scope.validate);
-        if ($scope.testForm.$valid) {
-            $scope.validate = false;
-        } else {
-            $scope.validate = false;
-        }
+       
+       $timeout(function(){
+           $scope.validate = false; //return value to false in order to use again
+       },1500);
 
     }
 
