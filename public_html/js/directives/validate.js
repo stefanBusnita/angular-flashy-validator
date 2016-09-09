@@ -32,7 +32,6 @@ angular.module('angularFlashyValidator').directive('validate', function ($http, 
                      * Trigger validation manually ( when a button is pressed ).
                      */
                     attrs.$observe('validate', function (value) {
-                        console.log(value);
                         if (value) {
                             modelController.$validate();
                         }
