@@ -68,7 +68,7 @@ An example of a final element can look like this :
                            ng-model-options="{debounce: 300}"
                            validate="{{validate}}"/>
                 </div>
-                </form>
+</form>
 ```
                 
 The validation process will start after 300 ms time in which the user has stopped typing in that particular field.
@@ -78,21 +78,21 @@ An example of a default validation for minLength, from the `validate` directive 
 
 ```javascript
 min: {
-                            type: "min",
-                            defaultFlashLevel: '2',
-                            defaultDuration: 15, //not added to flash creation, can be added as last param
-                            checkValidity: function (modelValue, viewValue) {
-                                if (parseInt(viewValue) < parseInt(attrs.min)) {
-                                    flashController.registerFlash(attrs.id, title + "min value is " + attrs.min + ".", this.type, this.defaultFlashLevel);
-                                    return false;
-                                } else {
-                                    flashController.removeFlash(attrs.id, this.type);
-                                    return true;
-                                }
+    type: "min",
+    defaultFlashLevel: '2',
+    defaultDuration: 15, //not added to flash creation, can be added as last param
+    checkValidity: function (modelValue, viewValue) {
+        if (parseInt(viewValue) < parseInt(attrs.min)) {
+            flashController.registerFlash(attrs.id, title + "min value is " + attrs.min + ".", this.type, this.defaultFlashLevel);
+            return false;
+        } else {
+            flashController.removeFlash(attrs.id, this.type);
+            return true;
+        }
 
-                                return true;
-                            }
-                        }
+        return true;
+    }
+}
 ```
                         
 ~Note that the `defaultDuration` for the flash message is not used. It can be added as the last param in `registerFlash` function call. 
@@ -119,6 +119,7 @@ III.Installation:
 The `angular-flashy-validator` project is provided as a Netbeans project. 
 `Bower` is used as a package manager for this project.
 Short overview : 
+
 	1. Install dependencies with `bower install` in the project root.
 	
 	2. The project is good to go, simply run the index.html file in order to see the test page for the project.
@@ -129,6 +130,7 @@ There is a page for tests included in the project, in which some fields are vali
 Run `index.html` file using Netbeans.
 
 Short overview : 
+
 	1. A user can write values in the fields and see the output.
 	
 	2. There is a `testPageController` provided, thru which some model values are changed in order to view both validation input directions,
