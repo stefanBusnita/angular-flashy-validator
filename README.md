@@ -22,11 +22,14 @@ Provide the location of the flash ( message ) directive. Preferably on the <body
 
 ```html
 <body ng-app="angularFlashyValidator" flashy>
+```
 
 Next add a container for the flash messages.
 
+
 ```html
-<div id="flashesContainer"></div>```
+<div id="flashesContainer"></div>
+```
 
 Element prerequisites (A field that is going to be validated has to fulfill the following requirements ) : 
  
@@ -65,7 +68,8 @@ An example of a final element can look like this :
                            ng-model-options="{debounce: 300}"
                            validate="{{validate}}"/>
                 </div>
-                </form>```
+                </form>
+```
                 
 The validation process will start after 300 ms time in which the user has stopped typing in that particular field.
 
@@ -88,7 +92,8 @@ min: {
 
                                 return true;
                             }
-                        }```
+                        }
+```
                         
 ~Note that the `defaultDuration` for the flash message is not used. It can be added as the last param in `registerFlash` function call. 
 
@@ -100,7 +105,8 @@ angular.module('angularFlashyValidator').controller('TestPageController', functi
 $scope.createRandomFlash = function () {
         FlashService.addFlash("randomID", "this is a random flash", "random", 1, 2);
     };
-})```
+});
+```
 
 ~Note that `addFlash` function call has the following parameters(`id`,'text',`type(flash description)`,level(info, warning, danger, success),'duration(if not provided flash will stay on screen)')
 
