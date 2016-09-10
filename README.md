@@ -19,13 +19,15 @@ There is also the possibility to provide custom messages, via a service. This fu
 the validation directive. 
 
 Provide the location of the flash ( message ) directive. Preferably on the <body> tag.
+
 ```html
-<body ng-app="angularFlashyValidator" flashy>
-```
+<body ng-app="angularFlashyValidator" flashy>```
+
 Next add a container for the flash messages.
+
 ```html
-<div id="flashesContainer"></div>
-```
+<div id="flashesContainer"></div>```
+
 Element prerequisites (A field that is going to be validated has to fulfill the following requirements ) : 
  
 	1. Be part of a `<form>`
@@ -44,10 +46,10 @@ Element prerequisites (A field that is going to be validated has to fulfill the 
 	5. An element must be provided with an id attribute, whose value is used in the flash creation process as the id of the flash.
 	A flash is identified by the following key (id,type), where `id` can be any string and `type` is a description. 
 	As a result we can have 3 flashes for a field with the following keys : 
-	(`noField`,`required`), (`noField`,`minlength`), (`noField`,`minDate`) e.t.c for a certain id, which in the default validation case is the
-	value of the `id` attribute.
+	(`noField`,`required`), (`noField`,`minlength`), (`noField`,`minDate`) e.t.c for a certain id, which in the default validation case is the value of the `id` attribute.
 
 An example of a final element can look like this : 
+
 ```html
 <form novalidate="" name="testForm">
                 <div class="form-group" ng-class="{'has-error' : testForm.tstInputName.$error.isRequired}">
@@ -63,12 +65,13 @@ An example of a final element can look like this :
                            ng-model-options="{debounce: 300}"
                            validate="{{validate}}"/>
                 </div>
-                </form>
-                ```
+                </form>```
+                
 The validation process will start after 300 ms time in which the user has stopped typing in that particular field.
 
 
 An example of a default validation for minLength, from the `validate` directive : 
+
 ```javascript
 min: {
                             type: "min",
@@ -85,25 +88,26 @@ min: {
 
                                 return true;
                             }
-                        }
-                        ```
+                        }```
+                        
 ~Note that the `defaultDuration` for the flash message is not used. It can be added as the last param in `registerFlash` function call. 
 
 A custom flash can also be provided at any time and location by using a service provided, called `FlashService`.
 Example of a custom flash usage : 
+
 ```javascript
 angular.module('angularFlashyValidator').controller('TestPageController', function ($scope, FlashService) {
 $scope.createRandomFlash = function () {
         FlashService.addFlash("randomID", "this is a random flash", "random", 1, 2);
     };
 })```
+
 ~Note that `addFlash` function call has the following parameters(`id`,'text',`type(flash description)`,level(info, warning, danger, success),'duration(if not provided flash will stay on screen)')
 
 II.Motivation:
 	This project was created in order to fulfill the need for validation and custom message providing in some projects that include a 
 large number of forms that need validation. 
-By using `angular-flashy-validator` there was a unified way in which validation was done throughout all the projects, regarding the actual validation
-and the messages provided by the app. Also code duplication was avoided, as it would obviously clutter projects, making them hard to maintain.
+By using `angular-flashy-validator` there was a unified way in which validation was done throughout all the projects, regarding the actual validation and the messages provided by the app. Also code duplication was avoided, as it would obviously clutter projects, making them hard to maintain.
 
 III.Installation:
 The `angular-flashy-validator` project is provided as a Netbeans project. 
