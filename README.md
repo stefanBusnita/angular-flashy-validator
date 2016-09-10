@@ -21,7 +21,7 @@ the validation directive.
 Provide the location of the flash ( message ) directive. Preferably on the <body> tag.
 
 ```html
-<body ng-app="angularFlashyValidator" flashy>```
+<body ng-app="angularFlashyValidator" flashy>
 
 Next add a container for the flash messages.
 
