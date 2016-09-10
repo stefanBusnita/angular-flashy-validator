@@ -15,6 +15,7 @@ can be used separatelly without the validation directive, and accessed via a ser
 
 
 I.Description and code examples:
+
 	The directives can be used to validate form inputs (e.g required, min-length e.t.c) providing a unified way of validation for all the 
 forms in the application. There are a few default validation methods included for checking length, intervals ( dates and numbers ), patterns, and field requirement.
 There is also the possibility to provide custom messages, via a service. This functionality does not require adding 
@@ -113,11 +114,13 @@ $scope.createRandomFlash = function () {
 ~Note that `addFlash` function call has the following parameters(`id`,'text',`type(flash description)`,level(info, warning, danger, success),'duration(if not provided flash will stay on screen)')
 
 II.Motivation:
+
 	This project was created in order to fulfill the need for validation and custom message providing in some projects that include a 
 large number of forms that need validation. 
 By using `angular-flashy-validator` there was a unified way in which validation was done throughout all the projects, regarding the actual validation and the messages provided by the app. Also code duplication was avoided, as it would obviously clutter projects, making them hard to maintain.
 
 III.Installation:
+
 The `angular-flashy-validator` project is provided as a Netbeans project. 
 `Bower` is used as a package manager for this project.
 Short overview : 
@@ -127,6 +130,7 @@ Short overview :
 	2. The project is good to go, simply run the index.html file in order to see the test page for the project.
 
 IV.Tests:
+
 	The small complexity of the project did not require the inclusion of `Jasmine` tests ( the popular testing framework for angular apps ).
 There is a page for tests included in the project, in which some fields are validated using the provided directive, and messages are shown accordingly.
 Run `index.html` file using Netbeans.
