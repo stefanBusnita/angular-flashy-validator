@@ -1,6 +1,8 @@
 # angular-flashy-validator
-A two step general validation process for `ngModel` using angular directives.
+A two step general validation process for `ngModel` using angular directives:
+
 	1. Check if the values in the field pass the default given validators
+	
 	2. Show a coresponding default message with the error.
 
 ~Note that the 2 directives work together, the validation directive requires the flash directive to show messages. The flash directive 
